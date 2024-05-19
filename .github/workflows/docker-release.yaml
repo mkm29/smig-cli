@@ -58,6 +58,17 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
+      - id: auth2
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ vars.PROJECT_ID }}
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      - name: set crdential_file
+        run: gcloud auth login --cred-file=${{steps.auth2.outputs.credentials_file_path}}
+
       # Get GPG key from Google KMS
       - name: Sign Image
         id: sign-image
