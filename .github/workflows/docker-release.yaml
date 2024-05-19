@@ -62,7 +62,7 @@ jobs:
       - name: Sign Image
         id: sign-image
         run: |
-          cosign generate-key-pair --yes --kms gcpkms://projects/${{ vars.PROJECT_ID }}/locations/${{ vars.REGION }}/keyRings/${{ vars.KEY_RING }}/cryptoKeys/${{ vars.KEY_NAME }}
+          cosign generate-key-pair --kms gcpkms://projects/${{ vars.PROJECT_ID }}/locations/${{ vars.REGION }}/keyRings/${{ vars.KEY_RING }}/cryptoKeys/${{ vars.KEY_NAME }}
           # get digest from docker-push-tagged step
           SHA=${{ steps.docker-push-tagged.outputs.digest }}
           cosign sign --yes --key gcpkms://projects/${{ vars.PROJECT_ID }}/locations/${{ vars.REGION }}/keyRings/${{ vars.KEY_RING }}/cryptoKeys/${{ vars.KEY_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${SHA}           
