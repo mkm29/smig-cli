@@ -14,14 +14,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Printenv
+      # print all environment variables
+        run: env
+        # run: echo ${{ env }}
       - id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_POOL_ID }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_ID }}"
+          project_id: kubula-420821
+          workload_identity_provider: "projects/kubula-420821/locations/global/workloadIdentityPools/github-wif-pool/providers/githubwif"
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
       - name: set crdential_file
         run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
       - name: List GCP Artifacts
-        run: gcloud artifacts repositories list --project=${{ env.GCP_PROJECT_ID }} --location=${{ env.GCP_REGION }}
+        run: gcloud artifacts repositories list --project=kubula-420821 --location=us-east1
