@@ -34,9 +34,9 @@ jobs:
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
-      - name: Get tag
-        id: get-tag
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+    #   - name: Get tag
+    #     id: get-tag
+    #     run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
       - id: docker-push-tagged
         name: Tag Docker image and push to Google Artifact Registry
@@ -44,5 +44,5 @@ jobs:
         with:
           push: true
           tags: |
-             us-east1-docker.pkg.dev/kubula-420821/docker/smig-cli:${{ steps.get-tag.outputs.short_ref }}
+             us-east1-docker.pkg.dev/kubula-420821/docker/smig-cli:${{ github.sha}}
              us-east1-docker.pkg.dev/kubula-420821/docker/smig-cli:latest
