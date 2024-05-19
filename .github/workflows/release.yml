@@ -31,12 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          LATEST_VERSION=$(gh release view --json name -q '.name' -R anchore/syft)
-          echo "export const VERSION = \"$LATEST_VERSION\";" > src/SyftVersion.ts
-          # install husky hooks and dependencies:
-          npm install
-          # export the version for use with create-pull-request:
-          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
       # More assembly might be required: Docker logins, GPG, etc.
       # It all depends on your needs.
       - name: Run GoReleaser

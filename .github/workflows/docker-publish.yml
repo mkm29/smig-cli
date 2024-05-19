@@ -9,9 +9,9 @@ on:
   # schedule:
   #   - cron: '27 5 * * *'
   push:
-    branches:
-      - main
-      - develop
+    # branches:
+    #   - main
+    #   - develop
     # Publish semver tags as releases.
     tags:
       - 'v*.*.*'
