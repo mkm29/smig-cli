@@ -1,0 +1,27 @@
+name: wif-ci
+on:
+  push:
+    branches:
+    - "develop"
+jobs:
+  build:
+    name: "Test WIF"
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - id: auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_POOL_ID }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_ID }}"
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      - name: set crdential_file
+        run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
+      - name: List GCP Artifacts
+        run: gcloud artifacts repositories list --project=${{ env.GCP_PROJECT_ID }} --location=${{ env.GCP_REGION }}
