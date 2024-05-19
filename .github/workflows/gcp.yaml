@@ -17,12 +17,12 @@ jobs:
       - id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          project_id: ${{ secrets.PROJECT_ID }}
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.SA_EMAIL }}
+          project_id: ${{ vars.PROJECT_ID }}
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
       - name: set crdential_file
         run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
       - name: List GCP Artifacts
-        run: gcloud artifacts repositories list --project=kubula-420821 --location=us-east1
+        run: gcloud artifacts repositories list --project=${{ vars.PROJECT_ID }} --location=${{ vars.REGION }}
