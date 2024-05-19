@@ -53,6 +53,8 @@ cosign verify \
 ##           Authentication via Workload Identity Federation                  ##
 ################################################################################
 
+REPO=mkm29/smig-cli
+
 gcloud iam workload-identity-pools create github-wif-pool --location="global" --project $PROJECT_ID
 
 gcloud iam workload-identity-pools providers create-oidc githubwif \
@@ -65,8 +67,15 @@ gcloud iam service-accounts create test-wif \
     --display-name="Service account used by WIF POC" \
     --project $PROJECT_ID
 
-ROLES="role/cloudkms.signer role/cloudkms.cryptoKeyEncrypterDecrypter artifactregistry.reader artifactregistry.writer"
+
+ROLES=("roles/cloudkms.signer"
+"roles/cloudkms.cryptoKeyEncrypterDecrypter"
+"roles/artifactregistry.reader"
+"roles/artifactregistry.writer"
+)
 for ROLE in $ROLES; do
+    echo "Adding role $ROLE"
+    echo
     gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:test-wif@$PROJECT_ID.iam.gserviceaccount.com" \
         --role=$ROLE
@@ -75,8 +84,8 @@ done
 gcloud iam service-accounts add-iam-policy-binding test-wif@$PROJECT_ID.iam.gserviceaccount.com \
     --project=$PROJECT_ID \
     --role="roles/iam.workloadIdentityUser" \
-    --member="principalSet://iam.googleapis.com/projects/217757495458/locations/global/workloadIdentityPools/github-wif-pool/attribute.repository/mkm29/sigpilot"
+    --member="principalSet://iam.googleapis.com/projects/217757495458/locations/global/workloadIdentityPools/github-wif-pool/attribute.repository/$REPO"
 
 # restrict certain branches
 # ...
-#     --member=principal://iam.googleapis.com/projects/217757495458/locations/global/workloadIdentityPools/github-wif-pool/subject/repo:mkm29/sigpilot:ref:refs/heads/main
+#     --member=principal://iam.googleapis.com/projects/217757495458/locations/global/workloadIdentityPools/github-wif-pool/subject/repo:$REPO:ref:refs/heads/main
