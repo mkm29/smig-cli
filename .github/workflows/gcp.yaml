@@ -28,5 +28,5 @@ jobs:
       - name: set crdential_file
         run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
       - name: List GCP Artifacts
-        run: gcloud compute instances list --project=kubula-420821
-        # run: gcloud artifacts repositories list --project=kubula-420821 --location=us-east1
+        # run: gcloud compute instances list --project=kubula-420821
+        run: gcloud artifacts repositories list --project=kubula-420821 --location=us-east1
